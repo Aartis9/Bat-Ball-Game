@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>GAME</title>
+    <link rel="stylesheet" href="index.css">
+
+    <style>
+        
+        </style>
+</head>
+
+<body>
+    <h1>Bat Ball Stump Game</h1>
+    
+    <button class='choice-button' onClick ="
+    let compChoice = generatecompChoice();
+    let resultMsg = getResult('Bat', compChoice);
+    showResult('Bat', compChoice, resultMsg);
+    "> 
+    <img src="pics/bat.png" alt="Bat Image" 
+    class= "choice-image">
+</button>
+
+
+    <button class='choice-button' onClick="
+    compChoice = generatecompChoice();
+    resultMsg = getResult('Ball', compChoice);
+    showResult('Ball', compChoice, resultMsg);
+    "> 
+    <img src="pics/ball.png" alt="Bat Image" 
+    class= "choice-image">
+ </button>
+
+    <button class='choice-button' onClick = "
+    compChoice = generatecompChoice();
+    resultMsg = getResult('Stump', compChoice);
+    showResult('Stump', compChoice, resultMsg);
+    "> 
+    <img src="pics/stump.png" alt="Bat Image" 
+    class= "choice-image">
+ </button>
+
+
+    <h3 id="user-move"></h3>
+    <h3 id="comp-move"></h3>
+    <h3 id="result"></h3>
+    <h3 id="score"></h3>
+
+    <button onClick = "localStorage.clear()
+    resetScore();
+"> Reset </button>
+ 
+    <script> 
+        let score;
+        let scoreStr = localStorage.getItem('score');
+        
+        resetScore(scoreStr);
+
+        function resetScore(scoreStr) {     
+           score = scoreStr ? JSON.parse(scoreStr) : {
+                win: 0,
+                lost: 0,
+                tie: 0,
+            };
+        score.displayScore = function(){
+                return `score: Win: ${score.win}, Lost: ${score.lost}, Tie:${score.tie}`;
+            };
+            showResult();
+            // localStorage.clear();   
+        }
+        function generatecompChoice(){
+            let randomNum = Math.random() * 3;
+    if(randomNum >0 && randomNum <= 1){
+        return 'Bat';
+    }else if (randomNum >1 && randomNum <= 2){
+            return 'Ball';
+    }else {
+            return 'Stump';
+    }
+        }
+
+        function getResult(userMove, compMove) {
+            if(userMove === 'Bat') {
+                if(compMove === 'Ball') {
+                    score.win++;
+                    return 'User Won';
+                } else if(compMove === 'Bat') {
+                    score.tie++;
+                    return 'It is a Tie';
+                } else if(compMove === 'Stump'){
+                    score.lost++;
+                    return 'Computer has Won';
+                }
+            } else if(userMove === 'Ball') {
+                if(compMove === 'Ball') {
+                    score.tie++;
+                    return 'It is a Tie';
+                } else if(compMove === 'Bat') {
+                    score.lost++;
+                    return 'Computer Won';
+                } else if (compMove === 'Stump'){
+                    score.win++;
+                    return 'User Won';
+                }
+            } else {
+                if(compMove === 'Ball') {
+                    score.lost++;
+                    return 'Computer Won';
+                } else if(compMove === 'Bat') {
+                    score.win++;
+                    return 'User Won';
+                } else if(compMove === 'Stump'){
+                    score.tie++;
+                    return 'It is a Tie';
+                }
+            }
+        }
+
+        function showResult(userMove, compMove, result) {
+            localStorage.setItem('score', JSON.stringify(score));
+
+            document.querySelector('#user-move').innerText = 
+            userMove ? `You have chosen ${userMove}` : '';
+
+            document.querySelector('#comp-move').innerText = 
+            compMove ? `CompChoice is  ${compMove}` : '';
+
+            document.querySelector('#result').innerText = 
+            result ? result : '';
+
+            document.querySelector('#score').innerText = score.
+            displayScore();
+        }
+    </script>
+
+</body>
+</html>
+
+
+
